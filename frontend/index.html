@@ -291,40 +291,46 @@
   .section-head p { color: var(--text-muted); font-size: 15.5px; margin-top: 18px; max-width: 520px; }
   .section-head.center { margin: 0 auto 64px; text-align: center; }
 
-  /* ============ TIMELINE ============ */
-  .timeline-section { background: var(--black); padding: 130px 0; border-top: 1px solid var(--border); }
-  .timeline {
-    max-width: 720px;
-    margin: 0 auto;
-    position: relative;
-    padding-left: 36px;
+  /* ============ POR QUE AGORA (momentum) ============ */
+  .momentum-section { background: var(--black); padding: 130px 0; border-top: 1px solid var(--border); }
+  .momentum-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 8px;
   }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    left: 5px; top: 6px; bottom: 6px;
-    width: 1px;
-    background: linear-gradient(180deg, var(--gold), var(--border) 90%);
-  }
-  .t-step { position: relative; padding-bottom: 46px; }
-  .t-step:last-child { padding-bottom: 0; }
-  .t-step::before {
-    content: "";
-    position: absolute;
-    left: -36px; top: 4px;
-    width: 11px; height: 11px;
-    border-radius: 50%;
+  .momentum-card {
     background: var(--black);
-    border: 1px solid var(--text-faint);
+    padding: 44px 40px;
+    transition: background 0.4s ease;
   }
-  .t-step.current::before {
-    background: var(--gold);
-    border-color: var(--gold);
-    box-shadow: 0 0 0 4px rgba(184,155,94,0.15);
+  .momentum-card:hover { background: var(--surface); }
+  .momentum-card .icon { margin-bottom: 20px; }
+  .momentum-card h4 { font-family: var(--serif); font-size: 23px; color: var(--offwhite); font-weight: 500; margin-bottom: 10px; }
+  .momentum-card p { font-size: 13.5px; color: var(--text-muted); margin: 0; max-width: 400px; }
+
+  /* ============ NOSSA HISTÓRIA (foto de fundo, estilo hero) ============ */
+  .timeline-section {
+    position: relative;
+    overflow: hidden;
+    padding: 170px 0;
+    border-top: 1px solid var(--border);
+    background:
+      url('assets/images/historia-cd.jpg') 66% 20% / cover no-repeat,
+      var(--black);
   }
-  .t-step .t-label { font-family: var(--serif); font-size: 21px; color: var(--offwhite); }
-  .t-step.current .t-label { color: var(--gold); }
-  .t-step .t-tag { font-size: 11px; letter-spacing: 0.1em; color: var(--text-faint); text-transform: uppercase; margin-top: 4px; display: block; }
+  .timeline-section::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(100deg, rgba(11,11,12,0.94) 0%, rgba(11,11,12,0.78) 42%, rgba(11,11,12,0.3) 72%),
+      linear-gradient(0deg, rgba(11,11,12,0.5) 0%, rgba(11,11,12,0) 30%, rgba(11,11,12,0) 70%, rgba(11,11,12,0.5) 100%);
+  }
+  .timeline-section .wrap { position: relative; z-index: 2; }
+  .timeline-section .section-head { max-width: 640px; margin-bottom: 0; }
+  .timeline-section .section-head p + p { margin-top: 16px; }
 
   /* ============ ABOUT EDITORIAL ============ */
   .about-section { background: var(--surface); border-top: 1px solid var(--border); }
@@ -396,6 +402,17 @@
   .pillar .pillar-num { font-family: var(--serif); font-size: 13px; color: var(--gold); margin-bottom: 10px; display: block; }
   .pillar h4 { font-family: var(--serif); font-size: 23px; color: var(--offwhite); font-weight: 500; margin-bottom: 8px; }
   .pillar p { font-size: 13px; color: rgba(242,239,232,0.65); margin: 0; }
+
+  .pillars-secondary { margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(242,239,232,0.15); }
+  .pillars-secondary-label { display: block; font-size: 11.5px; letter-spacing: 0.06em; color: rgba(242,239,232,0.5); margin-bottom: 14px; }
+  .pillars-secondary-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pillar-chip {
+    font-size: 12.5px;
+    color: rgba(242,239,232,0.78);
+    border: 1px solid rgba(242,239,232,0.22);
+    padding: 7px 16px;
+    border-radius: 999px;
+  }
 
   /* ============ MANIFESTO ============ */
   .manifesto-section {
@@ -697,6 +714,7 @@
     .job-body-inner { grid-template-columns: 1fr; gap: 22px; }
     .form-grid-3 { grid-template-columns: 1fr 1fr; gap: 20px; }
     .hero { background-position: 68% 18%; }
+    .timeline-section { background-position: 70% 14%; padding: 130px 0; }
   }
   @media (max-width: 640px) {
     .wrap { padding: 0 20px; }
@@ -710,9 +728,11 @@
     .hero-content { padding: 0 20px 70px; }
     .hero-actions { flex-direction: column; }
     .btn { justify-content: center; }
-    .section-pad, .timeline-section, .culture-section, .jobs-section, .apply-section { padding: 80px 0; }
+    .section-pad, .timeline-section, .momentum-section, .culture-section, .jobs-section, .apply-section { padding: 80px 0; }
     .benefits-grid { grid-template-columns: 1fr; }
     .pillars-grid { grid-template-columns: 1fr; }
+    .momentum-grid { grid-template-columns: 1fr; }
+    .momentum-card { padding: 34px 26px; }
     .form-grid-2 { grid-template-columns: 1fr; gap: 0; }
     .form-grid-3 { grid-template-columns: 1fr; gap: 0; }
     .form-grid-3 [style*="grid-column: span 2"] { grid-column: auto; }
@@ -721,6 +741,12 @@
     .job-head-right { width: 100%; justify-content: space-between; }
     .about-block { padding: 40px 28px; min-height: 280px; }
     .repeatable-item { padding: 22px 18px 4px; }
+    .timeline-section { background-position: 74% 12%; }
+    .timeline-section::before {
+      background:
+        linear-gradient(180deg, rgba(11,11,12,0.75) 0%, rgba(11,11,12,0.88) 55%, rgba(11,11,12,0.94) 100%),
+        linear-gradient(100deg, rgba(11,11,12,0.55) 0%, rgba(11,11,12,0.2) 100%);
+    }
   }
 </style>
 </head>
@@ -759,13 +785,48 @@
   <div class="scroll-cue"><span class="line"></span> Role para descobrir</div>
 </header>
 
-<section class="timeline-section" id="historia">
+<section class="momentum-section" id="por-que-agora">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Por que agora?</span>
+      <h2>2026 marca o início de uma nova fase.</h2>
+      <p>Cada uma das frentes abaixo está sendo construída agora, ao mesmo tempo, e é exatamente nesse momento que moram as maiores oportunidades de carreira dessa história.</p>
+    </div>
+    <div class="momentum-grid reveal">
+      <div class="momentum-card">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 7h11v10H3V7Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 10h4l3 3v4h-7v-7Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg>
+        <h4>Novo Centro de Distribuição</h4>
+        <p>Uma operação logística construída do zero em Campinas, pensada para ser referência em armazenagem e distribuição de vinho no Brasil.</p>
+      </div>
+      <div class="momentum-card">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 21V9l8-5 8 5v12" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h4>Nova Flagship Store</h4>
+        <p>O primeiro espaço físico da marca: loja, wine bar e experiência de compra reunidos em um único ambiente.</p>
+      </div>
+      <div class="momentum-card">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 3 3 5v16l6-2 6 2 6-2V3l-6 2-6-2Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3v16M15 5v16" stroke-linecap="round"/></svg>
+        <h4>Expansão da distribuição nacional</h4>
+        <p>Uma rede logística estruturada para levar o vinho brasileiro premium a todo o país, partindo de Campinas.</p>
+      </div>
+      <div class="momentum-card">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke-linecap="round"/></svg>
+        <h4>Infraestrutura tecnológica</h4>
+        <p>WMS, marketplace e dados construídos desde a base, para sustentar uma operação greenfield em crescimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="timeline-section" id="historia" role="img" aria-label="Colaborador da Le Grand Terroir conferindo estoque com coletor no Centro de Distribuição em Campinas">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow">Nossa história</span>
-      <h2>Estamos construindo o primeiro capítulo.</h2>
-      <p>Não estamos apenas contratando pessoas. Estamos convidando profissionais para construir uma empresa desde o primeiro dia.</p>
-      <p>As contratações acontecem de forma escalonada ao longo do segundo semestre de 2026, conforme a necessidade de cada área. Todas as vagas abaixo compõem o nosso banco de currículos ativo.</p>
+      <h2>Campinas como ponto de partida</h2>
+      <p>Não escolhemos Campinas por acaso. Escolhemos porque ela conecta o que queremos construir.</p>
+      <p>No centro de uma das regiões mais dinâmicas do país, Campinas reúne infraestrutura, tecnologia, logística, talentos e acesso a alguns dos principais mercados consumidores do Brasil.</p>
+      <p>É daqui que estamos estruturando nosso novo ciclo de crescimento: uma operação integrada que conecta produtores, distribuição, tecnologia, varejo, hospitalidade e experiências.</p>
+      <p>Com acesso estratégico às principais rodovias do estado, proximidade com o Aeroporto Internacional de Viracopos e conexão direta com a capital e o interior paulista, Campinas nos permite pensar grande sem perder agilidade.</p>
+      <p>Mais do que uma sede, estamos construindo aqui o nosso hub. Um ponto de conexão entre quem produz, quem movimenta e quem vive o vinho brasileiro.</p>
     </div>
   </div>
 </section>
@@ -875,17 +936,22 @@
     <div class="section-head reveal">
       <span class="eyebrow">Nossa cultura</span>
       <h2>Criamos com obstinação. Servimos com hospitalidade.</h2>
-      <p>Oito pilares guiam como trabalhamos, decidimos e cuidamos uns dos outros todos os dias.</p>
+      <p>Quatro comportamentos centrais guiam como trabalhamos, decidimos e cuidamos uns dos outros todos os dias.</p>
     </div>
     <div class="pillars-grid">
       <div class="pillar reveal"><span class="pillar-num">01</span><h4>Hospitalidade</h4><p>Recebemos pessoas e ideias com generosidade.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">02</span><h4>Excelência</h4><p>O detalhe importa, do vinhedo à entrega.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">03</span><h4>Curiosidade</h4><p>Perguntamos, aprendemos, questionamos o óbvio.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">04</span><h4>Autonomia</h4><p>Confiamos em quem constrói para decidir e agir.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">05</span><h4>Senso de dono</h4><p>Tratamos a operação como se fosse nossa, porque é.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">06</span><h4>Longo prazo</h4><p>Construímos para durar, não para o próximo trimestre.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">07</span><h4>Brasilidade</h4><p>Orgulho pelo que o Brasil produz de melhor em vinho.</p></div>
-      <div class="pillar reveal"><span class="pillar-num">08</span><h4>Obstinação pela qualidade</h4><p>Nunca é bom o suficiente. Sempre dá para refinar.</p></div>
+      <div class="pillar reveal"><span class="pillar-num">02</span><h4>Senso de dono</h4><p>Tratamos a operação como se fosse nossa, porque é.</p></div>
+      <div class="pillar reveal"><span class="pillar-num">03</span><h4>Brasilidade</h4><p>Orgulho pelo que o Brasil produz de melhor em vinho.</p></div>
+      <div class="pillar reveal"><span class="pillar-num">04</span><h4>Obstinação pela qualidade</h4><p>Nunca é bom o suficiente. Sempre dá para refinar.</p></div>
+    </div>
+    <div class="pillars-secondary reveal">
+      <span class="pillars-secondary-label">Esses comportamentos também guiam nosso dia a dia:</span>
+      <div class="pillars-secondary-list">
+        <span class="pillar-chip">Excelência</span>
+        <span class="pillar-chip">Curiosidade</span>
+        <span class="pillar-chip">Autonomia</span>
+        <span class="pillar-chip">Longo prazo</span>
+      </div>
     </div>
   </div>
 </section>
@@ -914,9 +980,6 @@
     <div class="chip-groups reveal">
       <div class="chip-row" id="areaChips">
         <span class="chip-label">Área</span>
-      </div>
-      <div class="chip-row" id="modeloChips">
-        <span class="chip-label">Modelo</span>
       </div>
     </div>
 
@@ -1263,7 +1326,6 @@
   };
 
   let activeArea = '';
-  let activeJornada = '';
 
   // ---- Render dos chips de filtro ------------------------------------
   function renderChips() {
@@ -1281,22 +1343,6 @@
         applyFilters();
       });
       areaContainer.appendChild(btn);
-    });
-
-    const jornadaSet = ['Todas', ...Object.keys(jornadaLabels)];
-    const jornadaContainer = document.getElementById('modeloChips');
-    jornadaSet.forEach(j => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip' + (j === 'Todas' ? ' active' : '');
-      btn.textContent = j === 'Todas' ? 'Todas' : jornadaLabels[j];
-      btn.dataset.value = j === 'Todas' ? '' : j;
-      btn.addEventListener('click', () => {
-        activeJornada = btn.dataset.value;
-        document.querySelectorAll('#modeloChips .chip').forEach(c => c.classList.toggle('active', c === btn));
-        applyFilters();
-      });
-      jornadaContainer.appendChild(btn);
     });
   }
 
@@ -1354,10 +1400,9 @@
     const query = document.getElementById('searchInput').value.trim().toLowerCase();
     const filtered = VAGAS.filter(job => {
       const matchesArea = !activeArea || AREAS[job.titulo] === activeArea;
-      const matchesJornada = !activeJornada || job.jornada === activeJornada;
       const haystack = (job.titulo + ' ' + job.descricao).toLowerCase();
       const matchesQuery = !query || haystack.includes(query);
-      return matchesArea && matchesJornada && matchesQuery;
+      return matchesArea && matchesQuery;
     });
     renderJobs(filtered);
     document.getElementById('noResults').style.display = filtered.length === 0 ? 'block' : 'none';
