@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin — Le Grand Terroir</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0B0B0C;
+    --wine: #4A0F1C;
+    --gold: #B89B5E;
+    --olive: #5C6652;
+    --surface: #141314;
+    --surface-alt: #1B1A1B;
+    --border: rgba(242, 239, 232, 0.12);
+    --border-strong: rgba(242, 239, 232, 0.22);
+    --text: #F2EFE8;
+    --text-muted: rgba(242, 239, 232, 0.62);
+    --text-faint: rgba(242, 239, 232, 0.4);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--black);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+  }
+  .navbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .navbar .brand { font-family: var(--serif); font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .navbar a { color: var(--text-faint); text-decoration: none; font-size: 12.5px; letter-spacing: 0.04em; }
+  .navbar a:hover { color: var(--gold); }
+
+  /* Login gate */
+  #loginGate {
+    max-width: 400px;
+    margin: 110px auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+  #loginGate .eyebrow { text-transform: uppercase; letter-spacing: 0.18em; font-size: 11px; color: var(--gold); display: block; margin-bottom: 14px; }
+  #loginGate h1 { font-family: var(--serif); font-size: 24px; font-weight: 500; margin: 0 0 8px; }
+  #loginGate p { font-size: 13px; color: var(--text-muted); margin: 0 0 26px; }
+  #loginGate input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-strong);
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    padding: 10px 2px;
+    margin-bottom: 22px;
+  }
+  #loginGate input:focus { border-color: var(--gold); }
+  #loginGate button {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 13px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  #loginGate button:hover { background: #cbb27a; }
+  #loginError { color: #e2a4ae; font-size: 12.5px; margin-top: 14px; display: none; }
+
+  /* Panel */
+  #panel { display: none; max-width: 1280px; margin: 0 auto; padding: 40px 32px 80px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 36px; }
+  .stat-card { background: var(--surface); padding: 22px 20px; }
+  .stat-card .stat-num { font-family: var(--serif); font-size: 32px; color: var(--text); }
+  .stat-card .stat-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 4px; }
+  .stat-card.novo .stat-num { color: var(--gold); }
+  .stat-card.aprovado .stat-num { color: #9fc19a; }
+  .stat-card.rejeitado .stat-num { color: #e2a4ae; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; align-items: center; }
+  .toolbar input, .toolbar select {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: var(--sans);
+  }
+  .toolbar input { flex: 1 1 220px; }
+  .toolbar button {
+    padding: 10px 18px;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text);
+  }
+  .toolbar button:hover { border-color: var(--gold); color: var(--gold); }
+  .toolbar .btn-primary { background: var(--gold); color: var(--black); border-color: var(--gold); }
+  .toolbar .btn-primary:hover { background: #cbb27a; color: var(--black); }
+
+  .summary { font-size: 12.5px; color: var(--text-faint); margin-bottom: 14px; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); font-size: 13px; }
+  thead th {
+    background: var(--surface-alt);
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  tbody td { padding: 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-muted); }
+  tbody tr.candidate-row:hover { background: rgba(255,255,255,0.02); }
+  tbody td strong { color: var(--text); font-weight: 500; }
+
+  .status-select {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: var(--sans);
+  }
+
+  .link-btn { color: var(--gold); text-decoration: none; font-weight: 500; font-size: 12.5px; background: none; border: none; cursor: pointer; padding: 0; }
+  .link-btn:hover { text-decoration: underline; }
+  .delete-btn { color: #c4707c; background: none; border: none; cursor: pointer; font-size: 12px; padding: 0; }
+
+  .empty-state { text-align: center; color: var(--text-faint); padding: 60px 0; font-size: 13.5px; }
+  .msg-box { font-size: 12px; color: var(--text-faint); max-width: 220px; white-space: pre-wrap; }
+
+  /* Detail row (endereço, experiências, formações) */
+  .detail-row td { background: var(--surface-alt); border-bottom: 1px solid var(--border); }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding: 6px 4px; }
+  .detail-grid h5 {
+    font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 10px; font-weight: 500;
+  }
+  .detail-grid p, .detail-grid .detail-item { font-size: 12.5px; color: var(--text-muted); margin: 0 0 10px; }
+  .detail-item { border-left: 2px solid var(--border-strong); padding-left: 10px; margin-bottom: 12px; }
+  .detail-item strong { color: var(--text); display: block; font-size: 12.5px; }
+  .detail-item span.sub { color: var(--text-faint); font-size: 11.5px; }
+  .detail-empty { color: var(--text-faint); font-size: 12px; font-style: italic; }
+
+  @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } .detail-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr.candidate-row { background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; padding: 8px 14px; }
+    tbody td { border: none; padding: 7px 0; }
+    tbody td::before { content: attr(data-label); display: block; font-size: 10px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 2px; }
+    .detail-row { margin-bottom: 10px; display: block; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="brand">Le Grand Terroir · Admin</div>
+  <a href="index.html">Ver site público</a>
+</nav>
+
+<div id="loginGate">
+  <span class="eyebrow">Acesso restrito</span>
+  <h1>Painel de candidaturas</h1>
+  <p>Informe o token de administrador para continuar.</p>
+  <input type="password" id="tokenInput" placeholder="Token de administrador">
+  <button onclick="login()">Entrar</button>
+  <div id="loginError">Token inválido. Tente novamente.</div>
+</div>
+
+<div id="panel">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card novo"><div class="stat-num" id="statNovo">0</div><div class="stat-label">Novas</div></div>
+    <div class="stat-card"><div class="stat-num" id="statAnalise">0</div><div class="stat-label">Em análise</div></div>
+    <div class="stat-card"><div class="stat-num" id="statEntrevista">0</div><div class="stat-label">Entrevista</div></div>
+    <div class="stat-card aprovado"><div class="stat-num" id="statAprovado">0</div><div class="stat-label">Aprovados</div></div>
+    <div class="stat-card rejeitado"><div class="stat-num" id="statRejeitado">0</div><div class="stat-label">Rejeitados</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="Buscar por nome, e-mail ou telefone...">
+    <select id="vagaFilterBox"><option value="">Todas as vagas</option></select>
+    <select id="statusFilterBox">
+      <option value="">Todos os status</option>
+      <option value="novo">Novo</option>
+      <option value="em análise">Em análise</option>
+      <option value="entrevista">Entrevista</option>
+      <option value="aprovado">Aprovado</option>
+      <option value="rejeitado">Rejeitado</option>
+    </select>
+    <button onclick="loadCandidaturas()">Atualizar</button>
+    <button class="btn-primary" onclick="exportCsv()">Exportar CSV</button>
+    <button onclick="logout()">Sair</button>
+  </div>
+
+  <div class="summary" id="summaryText"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th><th>Vaga</th><th>Contato</th><th>Cidade/UF</th>
+        <th>Status</th><th>Recebido em</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <div class="empty-state" id="emptyState" style="display:none;">Nenhuma candidatura encontrada.</div>
+</div>
+
+<script>
+  const API_BASE_URL = '';
+  let adminToken = sessionStorage.getItem('lgt_admin_token') || '';
+  let allCandidaturas = [];
+  let openDetailIds = new Set();
+
+  function authHeaders() { return { 'X-Admin-Token': adminToken }; }
+
+  async function login() {
+    const tokenValue = document.getElementById('tokenInput').value.trim();
+    if (!tokenValue) return;
+    adminToken = tokenValue;
+    const res = await fetch(`${API_BASE_URL}/api/candidaturas`, { headers: authHeaders() });
+    if (res.ok) {
+      sessionStorage.setItem('lgt_admin_token', adminToken);
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      loadCandidaturas();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('lgt_admin_token');
+    adminToken = '';
+    document.getElementById('panel').style.display = 'none';
+    document.getElementById('loginGate').style.display = 'block';
+    document.getElementById('tokenInput').value = '';
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  async function loadVagaOptions() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/vagas`);
+      const data = await res.json();
+      const select = document.getElementById('vagaFilterBox');
+      data.vagas.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = v;
+        select.appendChild(opt);
+      });
+    } catch (e) { /* silencioso */ }
+  }
+
+  function updateStats(items) {
+    const counts = { novo: 0, 'em análise': 0, entrevista: 0, aprovado: 0, rejeitado: 0 };
+    items.forEach(i => { if (counts[i.status] !== undefined) counts[i.status]++; });
+    document.getElementById('statNovo').textContent = counts['novo'];
+    document.getElementById('statAnalise').textContent = counts['em análise'];
+    document.getElementById('statEntrevista').textContent = counts['entrevista'];
+    document.getElementById('statAprovado').textContent = counts['aprovado'];
+    document.getElementById('statRejeitado').textContent = counts['rejeitado'];
+  }
+
+  async function loadCandidaturas() {
+    const q = document.getElementById('searchBox').value.trim();
+    const vaga = document.getElementById('vagaFilterBox').value;
+    const status = document.getElementById('statusFilterBox').value;
+
+    const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (vaga) params.set('vaga', vaga);
+    if (status) params.set('status', status);
+
+    const res = await fetch(`${API_BASE_URL}/api/candidaturas?${params.toString()}`, { headers: authHeaders() });
+    if (res.status === 401) { logout(); return; }
+
+    const data = await res.json();
+    allCandidaturas = data.candidaturas;
+    renderTable(allCandidaturas);
+    document.getElementById('summaryText').textContent = `${data.total} candidatura(s) encontrada(s).`;
+
+    if (!q && !vaga && !status) {
+      updateStats(allCandidaturas);
+    } else {
+      const resAll = await fetch(`${API_BASE_URL}/api/candidaturas`, { headers: authHeaders() });
+      const dataAll = await resAll.json();
+      updateStats(dataAll.candidaturas);
+    }
+  }
+
+  function formatEndereco(e) {
+    if (!e) return '';
+    const linha1 = [e.rua, e.numero].filter(Boolean).join(', ');
+    const linha2 = [e.complemento, e.bairro].filter(Boolean).join(' - ');
+    const linha3 = [e.cidade, e.estado].filter(Boolean).join('/');
+    return [linha1, linha2, linha3, e.cep].filter(Boolean).join(' · ');
+  }
+
+  function renderDetailContent(item) {
+    const endereco = formatEndereco(item.endereco);
+    const experiencias = item.experiencias || [];
+    const formacoes = item.formacoes || [];
+
+    const expHtml = experiencias.length
+      ? experiencias.map(e => `
+          <div class="detail-item">
+            <strong>${escapeHtml(e.cargo) || '—'} ${e.empresa ? '· ' + escapeHtml(e.empresa) : ''}</strong>
+            <span class="sub">${escapeHtml(e.periodo) || ''}</span>
+            ${e.descricao ? `<p style="margin-top:4px;">${escapeHtml(e.descricao)}</p>` : ''}
+          </div>`).join('')
+      : '<div class="detail-empty">Nenhuma experiência informada.</div>';
+
+    const formHtml = formacoes.length
+      ? formacoes.map(f => `
+          <div class="detail-item">
+            <strong>${escapeHtml(f.curso) || '—'} ${f.instituicao ? '· ' + escapeHtml(f.instituicao) : ''}</strong>
+            <span class="sub">${[f.nivel, f.status, f.periodo].filter(Boolean).map(escapeHtml).join(' · ')}</span>
+          </div>`).join('')
+      : '<div class="detail-empty">Nenhuma formação informada.</div>';
+
+    return `
+      <div class="detail-grid">
+        <div>
+          <h5>Endereço</h5>
+          <p>${endereco ? escapeHtml(endereco) : '<span class="detail-empty">Não informado.</span>'}</p>
+          <h5 style="margin-top:18px;">Mensagem</h5>
+          <p>${item.mensagem ? escapeHtml(item.mensagem) : '<span class="detail-empty">Nenhuma mensagem.</span>'}</p>
+        </div>
+        <div><h5>Experiência profissional</h5>${expHtml}</div>
+        <div><h5>Formação acadêmica</h5>${formHtml}</div>
+      </div>
+    `;
+  }
+
+  function toggleDetail(id) {
+    if (openDetailIds.has(id)) {
+      openDetailIds.delete(id);
+    } else {
+      openDetailIds.add(id);
+    }
+    renderTable(allCandidaturas);
+  }
+
+  function renderTable(items) {
+    const tbody = document.getElementById('tableBody');
+    const emptyState = document.getElementById('emptyState');
+    tbody.innerHTML = '';
+
+    if (!items.length) { emptyState.style.display = 'block'; return; }
+    emptyState.style.display = 'none';
+
+    items.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.className = 'candidate-row';
+      const dataFormatada = new Date(item.criado_em).toLocaleString('pt-BR');
+      const cidadeUf = [item.endereco && item.endereco.cidade, item.endereco && item.endereco.estado].filter(Boolean).join('/') || '—';
+      const isOpen = openDetailIds.has(item.id);
+
+      tr.innerHTML = `
+        <td data-label="Nome"><strong>${escapeHtml(item.nome)}</strong>${item.linkedin ? `<br><a class="link-btn" href="${escapeHtml(item.linkedin)}" target="_blank" rel="noopener" style="text-decoration:none;">LinkedIn ↗</a>` : ''}</td>
+        <td data-label="Vaga">${escapeHtml(item.vaga)}</td>
+        <td data-label="Contato">${escapeHtml(item.email)}<br>${escapeHtml(item.telefone)}</td>
+        <td data-label="Cidade/UF">${escapeHtml(cidadeUf)}</td>
+        <td data-label="Status">
+          <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
+            <option value="novo" ${item.status === 'novo' ? 'selected' : ''}>Novo</option>
+            <option value="em análise" ${item.status === 'em análise' ? 'selected' : ''}>Em análise</option>
+            <option value="entrevista" ${item.status === 'entrevista' ? 'selected' : ''}>Entrevista</option>
+            <option value="aprovado" ${item.status === 'aprovado' ? 'selected' : ''}>Aprovado</option>
+            <option value="rejeitado" ${item.status === 'rejeitado' ? 'selected' : ''}>Rejeitado</option>
+          </select>
+        </td>
+        <td data-label="Recebido em">${dataFormatada}</td>
+        <td>
+          <button class="link-btn" onclick="toggleDetail(${item.id})">${isOpen ? 'Ocultar' : 'Ver detalhes'}</button><br>
+          <button class="delete-btn" onclick="removeCandidatura(${item.id})">Remover</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+
+      if (isOpen) {
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'detail-row';
+        const td = document.createElement('td');
+        td.colSpan = 7;
+        td.innerHTML = renderDetailContent(item);
+        detailTr.appendChild(td);
+        tbody.appendChild(detailTr);
+      }
+    });
+  }
+
+  async function updateStatus(id, status) {
+    await fetch(`${API_BASE_URL}/api/candidaturas/${id}/status`, {
+      method: 'PATCH',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    loadCandidaturas();
+  }
+
+  async function removeCandidatura(id) {
+    if (!confirm('Remover esta candidatura definitivamente?')) return;
+    await fetch(`${API_BASE_URL}/api/candidaturas/${id}`, { method: 'DELETE', headers: authHeaders() });
+    loadCandidaturas();
+  }
+
+  function exportCsv() {
+    window.open(`${API_BASE_URL}/api/candidaturas/export/csv?token=${encodeURIComponent(adminToken)}`, '_blank');
+  }
+
+  document.getElementById('searchBox').addEventListener('input', debounce(loadCandidaturas, 350));
+  document.getElementById('vagaFilterBox').addEventListener('change', loadCandidaturas);
+  document.getElementById('statusFilterBox').addEventListener('change', loadCandidaturas);
+  document.getElementById('tokenInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+
+  function debounce(fn, wait) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+  }
+
+  (async function init() {
+    loadVagaOptions();
+    if (adminToken) {
+      const res = await fetch(`${API_BASE_URL}/api/candidaturas`, { headers: authHeaders() });
+      if (res.ok) {
+        document.getElementById('loginGate').style.display = 'none';
+        document.getElementById('panel').style.display = 'block';
+        loadCandidaturas();
+      } else {
+        adminToken = '';
+        sessionStorage.removeItem('lgt_admin_token');
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
